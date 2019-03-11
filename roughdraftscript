@@ -1,0 +1,480 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+Created on Wed Mar  6 16:49:23 2019
+
+@author: ronak
+"""
+
+# Loading Libraries
+import pandas as pd
+import seaborn as sns
+import matplotlib.pyplot as plt
+import statsmodels.formula.api as smf # regression modeling
+
+file= 'bw.xls'
+
+bw = pd.read_excel(file)
+
+
+
+
+
+########################
+# Fundamental Dataset Exploration
+########################
+
+# Column names
+bw.columns
+
+
+# Displaying the first rows of the DataFrame
+print(bw.head())
+
+
+# Dimensions of the DataFrame
+bw.shape
+
+
+# Information about each variable
+bw.info()
+
+
+# Descriptive statistics
+bw.describe().round(2)
+
+
+bw.sort_values('bwght', ascending = False)
+
+
+
+## Value Counts of each Var
+
+# MOther White (53) 
+bw['mwhte'].value_counts()
+
+# MOther Black (75)
+bw['mblck'].value_counts()
+
+## Mother Other (68)
+bw['moth'].value_counts()
+
+## Father White  (68)
+bw['fwhte'].value_counts()
+
+## Father BLack (67)
+bw['fblck'].value_counts()
+
+
+##### Father Other (61)
+bw['foth'].value_counts()
+
+#####
+#bw.corr()
+#bw.corr.loc[: , 'bwght'].sor_values(ascending = False)
+
+###############################################################################
+# Imputing Missing Values
+###############################################################################
+
+print(
+      bw
+      .isnull()
+      .sum()
+      )
+
+print(
+      bw
+      .isnull()
+      .any()
+      .any()
+      )
+
+
+for col in bw:
+
+    """ Create columns that are 0s if a value was not missing and 1 if
+    a value is missing. """
+    
+    if bw[col].isnull().any():
+        bw['m_'+col] = bw[col].isnull().astype(int)
+        
+        
+        
+        
+#############
+# Replacing Missing Vals
+#Mother Education
+fill = bw['meduc'].median()
+
+bw['meduc'] = bw['meduc'].fillna(fill)      
+
+##########
+# Number prenatal visits
+
+fill = bw['npvis'].mean()
+bw['npvis'] = bw['npvis'].fillna(fill)    
+
+####################
+# Father Education
+fill = bw['feduc'].median()
+
+bw['feduc'] = bw['feduc'].fillna(fill)      
+        
+
+print(
+      bw
+      .isnull()
+      .any()
+      .any()
+      )
+
+
+###############################################################################
+# Outlier Analysis
+###############################################################################
+
+bw_quantiles = bw.loc[:, :].quantile([0.20,
+                                                0.40,
+                                                0.60,
+                                                0.80,
+                                                1.00])
+
+    
+print(bw_quantiles)
+
+
+##############################################################################
+# Determine distribution of our categorical vars which became binary
+##############################################################################
+
+
+
+
+
+
+###############################################################################
+# Test to check distribution of vars with missing values
+###############################################################################
+
+plt.subplot(2, 2, 1)
+sns.distplot(bw['meduc'],
+             bins = 16,
+             color = 'g')
+
+plt.xlabel('Mother Edu')
+
+
+########################
+
+
+plt.subplot(2, 2, 2)
+sns.distplot(bw['npvis'],
+             bins = 20,
+             color = 'y',
+             )
+
+plt.xlabel('Num Prenatal Visit')
+
+
+
+########################
+
+
+plt.subplot(2, 2, 3)
+sns.distplot(bw['feduc'],
+             bins = 16,
+             color = 'orange')
+
+plt.xlabel('Father Edu')
+
+
+
+########################
+
+
+plt.subplot(2, 2, 4)
+
+sns.distplot(bw['bwght'],
+             bins = 50,
+             color = 'r')
+
+plt.xlabel('birthweight')
+
+
+
+plt.tight_layout()
+#plt.savefig('Housing Data Histograms 1 of 5.png')
+
+plt.show()
+
+
+sns.distplot(bw['monpre'],
+             bins = 50,
+             color = 'r')
+
+plt.xlabel('prenatal care')
+
+
+bw.corr()
+
+
+###############################################################
+# Scatterplots of race against birthweight
+#Saving Scatterplots that we want to analyze and use 
+sns.lmplot(x = 'moth',
+           y = 'bwght',
+           data = bw,
+           fit_reg = False,
+           hue= 'cigs',
+   
+           palette = 'plasma')
+
+plt.show()
+
+sns.lmplot(x = 'mwhte',
+           y = 'bwght',
+           data = bw,
+           fit_reg = False,
+           hue= 'cigs',
+   
+           palette = 'plasma')
+
+plt.show()
+
+sns.lmplot(x = 'mblck',
+           y = 'bwght',
+           data = bw,
+           fit_reg = False,
+           hue= 'cigs',
+   
+           palette = 'plasma')
+
+plt.show()
+
+
+sns.lmplot(x = 'moth',
+           y = 'bwght',
+           data = bw,
+           fit_reg = False,
+           hue= 'drink',
+   
+           palette = 'plasma')
+
+plt.show()
+
+
+sns.lmplot(x = 'mwhte',
+           y = 'bwght',
+           data = bw,
+           fit_reg = False,
+           hue= 'drink',
+   
+           palette = 'plasma')
+
+plt.show()
+
+sns.lmplot(x = 'mblck',
+           y = 'bwght',
+           data = bw,
+           fit_reg = False,
+           hue= 'drink',
+   
+           palette = 'plasma')
+
+plt.show()
+
+
+sns.lmplot(x = 'moth',
+           y = 'bwght',
+           data = bw,
+           fit_reg = False,
+           hue= 'mage',
+   
+           palette = 'plasma')
+
+plt.show()
+
+sns.lmplot(x = 'mwhte',
+           y = 'bwght',
+           data = bw,
+           fit_reg = False,
+           hue= 'mage',
+   
+           palette = 'plasma')
+
+plt.show()
+
+sns.lmplot(x = 'mblck',
+           y = 'bwght',
+           data = bw,
+           fit_reg = False,
+           hue= 'mage',
+   
+           palette = 'plasma')
+
+plt.show()
+
+#################################
+#Plots of birthweight/cigs/drinks
+#################################
+""" 
+We can find a distinct negative correlation between birhtweight and the 
+use of alcohol or cigarettes
+"""
+sns.lmplot(x = 'drink',
+           y = 'bwght',
+           data = bw,
+           fit_reg = False,
+           hue= 'cigs',
+   
+           palette = 'plasma')
+
+plt.show()
+
+sns.lmplot(x = 'cigs',
+           y = 'bwght',
+           data = bw,
+           fit_reg = False,
+           hue= 'drink',
+   
+           palette = 'plasma')
+
+plt.show()
+
+
+
+
+
+#############################################################################
+# FULL MODEL
+###########################################################################
+
+
+lm_full = smf.ols(formula = """bwght ~ bw['mage']+
+                                      bw['meduc']+ 
+                                       bw['monpre']+ 
+                                        bw['npvis']+ 
+                                         bw['fage']+ 
+                                         bw['feduc']+
+                                          bw['omaps']+
+                                           bw['fmaps']+
+                                          bw['cigs']+ 
+                                           bw['drink']+ 
+                                            bw['male']+ 
+                                             bw['mwhte']+ 
+                                              bw['mblck']+ 
+                                               bw['moth']+ 
+                                                bw['fwhte']+ 
+                                                 bw['fblck']+ 
+                                                  bw['foth'] 
+                                                                                                    
+                                           """,
+                         data = bw)
+
+
+# Fitting Results
+results = lm_full.fit()
+
+
+
+# Printing Summary Statistics
+print(results.summary())
+
+
+###########################################################################
+#Reducded 1
+###########################################################################
+
+
+lm_full = smf.ols(formula = """bwght ~ bw['mage']+
+                                       bw['cigs']+ 
+                                       bw['drink']+                                             
+                                       bw['mwhte']+ 
+                                       bw['mblck']+ 
+                                       bw['moth']+ 
+                                       bw['fwhte']+ 
+                                       bw['fblck']+ 
+                                       bw['foth'] 
+                                                                                                    
+                                           """,
+                         data = bw)
+
+
+# Fitting Results
+results = lm_full.fit()
+
+
+
+# Printing Summary Statistics
+print(results.summary())
+
+
+########################################################
+# R2
+########################################################
+
+
+
+lm_full = smf.ols(formula = """bwght ~ bw['mage']+
+                                    
+                                         
+                                          
+                                          bw['cigs']+ 
+                                           bw['drink']+ 
+                                            
+                                             bw['mwhte']+ 
+                                              bw['mblck']+ 
+                                               bw['moth'] 
+                                                
+                                               
+                                                                                                    
+                                           """,
+                         data = bw)
+
+
+# Fitting Results
+results = lm_full.fit()
+
+
+
+# Printing Summary Statistics
+print(results.summary())
+
+
+#######################################################################
+### SIMPLEST REGRESSION MODEL USING BWGHT AS A CONTINUOUS VAR
+lm_full = smf.ols(formula = """bwght ~    bw['mage']+
+                                          bw['cigs']+ 
+                                          bw['drink']
+                                          
+                                       
+                                        
+                                          
+                                                  """,
+                                      
+                         data = bw)
+
+
+# Fitting Results
+results = lm_full.fit()
+
+
+
+# Printing Summary Statistics
+print(results.summary())
+
+"""
+We can see the model above with only 3 variables can predict birthweight as a continous variable.
+However we must convert birthweight into a binary variable to conduct a logistic
+regression to analyze the probablity a baby will have low birthweight dependent
+on the genetics of the father/mother and as well as the use of drugs and
+the use of medical care whilest pregnant. 
+"""
+
+#######################################################################
+#RECODING BWGHT INTO A BINARY FOR LOGISTIC REGRESSION
+#######################################################################
+
+
+
