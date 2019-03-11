@@ -328,6 +328,21 @@ plt.ylabel ('Birthweight')
 plt.xlabel ("Mother's Age")
 plt.show()
 
+# Mother's Education
+sns.set(font_scale=1.5)
+df_mage = sns.lmplot(x = 'meduc',
+                y = 'bwght',
+                height=8,
+                aspect= 1.5,
+                fit_reg = True,
+                scatter_kws={"s": 300},
+                palette = 'plasma',
+                data = df_median)
+plt.title ("Birthweight and Mother's Education")
+plt.ylabel ('Birthweight')
+plt.xlabel ("Mother's Education")
+plt.show()
+
 # Father's Age
 sns.set(font_scale=1.5)
 df_mage = sns.lmplot(x = 'fage',
@@ -341,6 +356,21 @@ df_mage = sns.lmplot(x = 'fage',
 plt.title ("Birthweight and Father's Age")
 plt.ylabel ('Birthweight')
 plt.xlabel ("Father's Age")
+plt.show()
+
+# Father's Education
+sns.set(font_scale=1.5)
+df_mage = sns.lmplot(x = 'feduc',
+                y = 'bwght',
+                height=8,
+                aspect= 1.5,
+                fit_reg = True,
+                scatter_kws={"s": 300},
+                palette = 'plasma',
+                data = df_median)
+plt.title ("Birthweight and Father's Education")
+plt.ylabel ('Birthweight')
+plt.xlabel ("Father's Education")
 plt.show()
 
 # Month of prenatal visits
