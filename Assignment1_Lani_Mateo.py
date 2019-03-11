@@ -313,7 +313,7 @@ plt.xlabel ("Average alcohol consumption")
 plt.show()
 
 # Step 7d Scatterplots
-#Mother's Age
+# Mother's Age
 sns.set(font_scale=1.5)
 df_mage = sns.lmplot(x = 'mage',
                 y = 'bwght',
@@ -328,7 +328,7 @@ plt.ylabel ('Birthweight')
 plt.xlabel ("Mother's Age")
 plt.show()
 
-#Father's Age
+# Father's Age
 sns.set(font_scale=1.5)
 df_mage = sns.lmplot(x = 'fage',
                 y = 'bwght',
@@ -341,6 +341,36 @@ df_mage = sns.lmplot(x = 'fage',
 plt.title ("Birthweight and Father's Age")
 plt.ylabel ('Birthweight')
 plt.xlabel ("Father's Age")
+plt.show()
+
+# Month of prenatal visits
+sns.set(font_scale=1.5)
+df_mage = sns.lmplot(x = 'monpre',
+                y = 'bwght',
+                height=8,
+                aspect= 1.5,
+                fit_reg = True,
+                scatter_kws={"s": 300},
+                palette = 'plasma',
+                data = df_median)
+plt.title ("Birthweight and Month of Prenatal Visit")
+plt.ylabel ('Birthweight')
+plt.xlabel ("Month of Prenatal Visit")
+plt.show()
+
+#Number of prenatal visits
+sns.set(font_scale=1.5)
+df_mage = sns.lmplot(x = 'npvis',
+                y = 'bwght',
+                height=8,
+                aspect= 1.5,
+                fit_reg = True,
+                scatter_kws={"s": 300},
+                palette = 'plasma',
+                data = df_median)
+plt.title ("Birthweight and Number of Prenatal Visit")
+plt.ylabel ('Birthweight')
+plt.xlabel ("Number of Prenatal Visit")
 plt.show()
 
 #Average cigarette consumption
