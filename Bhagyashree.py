@@ -14,34 +14,34 @@ import seaborn as sns
 #displaying all the columns when called
 file = 'birthweight_feature_set.xlsx'
 
-bwt_df = pd.read_excel(file)
+df = pd.read_excel(file)
 
 
 #Dataset exploration
 
-bwt_df.columns
+df.columns
 
-bwt_df.shape
+df.shape
 
-bwt_df.describe().round(2)
+df.describe().round(2)
 
-bwt_df.info()
+df.info()
 
-bwt_df.corr()
+df.corr()
 
 ################################################################
 #Flagging missing values 
 ################################################################
 
-bwt_df.isnull().sum()
+df.isnull().sum()
 
-for col in bwt_df:
+for col in df:
 
     """ Create columns that are 0s if a value was not missing and 1 if
     a value is missing. """
     
-    if bwt_df[col].isnull().any():
-        bwt_df['m_'+col] = bwt_df[col].isnull().astype(int)
+    if df[col].isnull().any():
+        df['m_'+col] = df[col].isnull().astype(int)
         
 ################################################################
 #checking missing values from omaps, fmaps &  cigs
@@ -49,11 +49,11 @@ for col in bwt_df:
 
 
 
-bwt_df['omaps'].describe()
+df['omaps'].describe()
 
-bwt_df['fmaps'].describe()
+df['fmaps'].describe()
 
-bwt_df['cigs'].describe()
+df['cigs'].describe()
 
 
 ################################################################
@@ -61,7 +61,7 @@ bwt_df['cigs'].describe()
 ################################################################
 
 plt.subplot(2, 2, 1)
-sns.distplot(bwt_df['omaps'],
+sns.distplot(df['omaps'],
              bins = 'fd',
              color = 'y')
 
@@ -72,7 +72,7 @@ plt.xlabel('1 min apgar score')
 
 
 plt.subplot(2, 2, 2)
-sns.distplot(bwt_df['fmaps'],
+sns.distplot(df['fmaps'],
              bins = 'fd',
              color = 'g')
 
@@ -84,7 +84,7 @@ plt.xlabel('5 min apgar score')
 
 
 plt.subplot(2, 2, 3)
-sns.distplot(bwt_df['cigs'],
+sns.distplot(df['cigs'],
              bins = 'fd',
              color = 'red')
 
@@ -103,13 +103,13 @@ plt.show()
 #Combining outliers with thresholds gathered from qualitative analysis
 ################################################
 
-bwt_df_quantiles = bwt_df.loc[:, :].quantile([0.10,
+df_quantiles = df.loc[:, :].quantile([0.10,
                                                 0.40,
                                                 0.60,
                                                 0.80,
                                                 0.95])
 
-print(bwt_df_quantiles)
+print(df_quantiles)
 
 # apgar score
 omaps_lo = 3
@@ -122,27 +122,27 @@ cigs_hi = 1
 cigs_hi = 1
 
 #APGAR Scores
-bwt_df['out_omaps'] = 0
-for val in enumerate(bwt_df.loc[ : , 'omaps']):
+df['out_omaps'] = 0
+for val in enumerate(df.loc[ : , 'omaps']):
     if val[1] <= omaps_lo:
-        bwt_df.loc[val[0], 'out_omaps'] = 1
+        df.loc[val[0], 'out_omaps'] = 1
 
-bwt_df['out_fmaps'] = 0
-for val in enumerate(bwt_df.loc[ : , 'fmaps']):
+df['out_fmaps'] = 0
+for val in enumerate(df.loc[ : , 'fmaps']):
     if val[1] <= fmaps_lo:
-        bwt_df.loc[val[0], 'out_fmaps'] = 1
+        df.loc[val[0], 'out_fmaps'] = 1
 
 #Cigarettes per day
-bwt_df['out_cigs'] = 0
-for val in enumerate(bwt_df.loc[ : , 'cigs']):
+df['out_cigs'] = 0
+for val in enumerate(df.loc[ : , 'cigs']):
     if val[1] >= cigs_hi:
-        bwt_df.loc[val[0], 'out_cigs'] = 1
+        df.loc[val[0], 'out_cigs'] = 1
         
 
 ####################################
 # Correlation
 
-df_corr = bwt_df.corr().round(2)
+df_corr = df.corr().round(2)
 
 print(df_corr)
 
@@ -167,5 +167,5 @@ plt.show()
 
 #####################################
 # Saving file
-bwt_df.to_excel('birthweight_new.xlsx')
+df.to_excel('birthweight_new.xlsx')
 
