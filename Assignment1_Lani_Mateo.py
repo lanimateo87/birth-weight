@@ -499,58 +499,7 @@ for val in enumerate(df_median.loc[ : , 'drink']):
         
 print(df_median)
 
-##############################################################################
-#Regression Analysis
-##############################################################################
-# Full Model
-df_median_bwght = smf.ols(formula = """bwght ~ df_median['mage'] +
-                                              df_median['meduc'] +
-                                              df_median['monpre'] +
-                                              df_median['npvis'] +
-                                              df_median['fage'] +
-                                              df_median['feduc'] +
-                                              df_median['omaps'] +
-                                              df_median['fmaps'] +
-                                              df_median['cigs'] +
-                                              df_median['drink'] +
-                                              df_median['male'] +
-                                              df_median['mwhte'] +
-                                              df_median['mblck'] +
-                                              df_median['moth'] +
-                                              df_median['fwhte'] +
-                                              df_median['fblck'] +
-                                              df_median['foth'] +
-                                              df_median['bwght'] +
-                                              df_median['m_meduc'] +
-                                              df_median['m_npvis'] +
-                                              df_median['m_feduc']
-                                              """,
-                                              data = df_median)
-results_bwght = df_median_bwght.fit()
-print(results_bwght.summary())
-
-print(f"""
-Summary Statistics:
-R-Squared:          {results_bwght.rsquared.round(3)}
-Adjusted R-Squared: {results_bwght.rsquared_adj.round(3)}
-""")
-    
-predict = results_bwght.predict()
-y_hat   = pd.DataFrame(predict).round(2)
-resids  = results_bwght.resid.round(2)
-
-# We can find more functions available using the dir() command.
-dir(results_bwght)
-
-# Saving as a new dataset for future use.
-df_median.to_excel('Birthweight_Dummies.xlsx')
-
-"""
-INSIGHT
-The full model doesn't help and results to strong multicollinearity.
-Some of the variables doesn't inform the model and should be dropped.
-"""
-
+#USING KNN for prediction
 # Prioritize and drop variables
 df_data= df_median.drop(['bwght',
                   #'mage',
