@@ -59,7 +59,7 @@ There is no correlation between birth weight and any of the variables
 There isn't significant variance among the variables.
 No point doing any further analysis on this data set
 """
-
+#Data Set 2
 # Step 1: Clear variable explorer and console
 # Step 2: Run packages
 # Step 3: Import new data set
@@ -433,6 +433,72 @@ plt.ylabel ('Birthweight')
 plt.xlabel ("Average alcohol consumption")
 plt.show()
 
+# Flag Outliers
+
+mage_high = 35
+monpre_high = 4
+npvis_lo = 9
+npvis_hi = 15
+fage_hi = 45
+feduc_lo = 6
+drink_high = 12
+bweight_lo = 2500
+
+# Birth weight
+df_median['out_bwght'] = 0
+for val in enumerate(df_median.loc[ : , 'bwght']):
+    if val[1] <= bweight_lo:
+        df_median.loc[val[0], 'out_bwght'] = -1
+
+# Prenatal visits
+df_median['out_npvis'] = 0
+for val in enumerate(df_median.loc[ : , 'npvis']):
+    
+    if val[1] > npvis_hi:
+        df_median.loc[val[0], 'out_npvis'] = 1
+      
+for val in enumerate(df_median.loc[ : , 'npvis']):    
+    if val[1] < npvis_lo:
+        df_median.loc[val[0], 'out_npvis'] = -1
+        
+# Father's Education        
+df_median['out_feduc'] = 0
+for val in enumerate(df_median.loc[ : , 'feduc']):   
+    if val[1] <= feduc_lo:
+        df_median.loc[val[0], 'out_feduc'] = -1
+            
+# Father's age        
+df_median['out_fage'] = 0
+for val in enumerate(df_median.loc[ : , 'fage']):   
+    if val[1] >= fage_hi:
+        df_median.loc[val[0], 'out_fage'] = 1
+
+# Mother's age        
+df_median['out_mage'] = 0
+for val in enumerate(df_median.loc[ : , 'mage']):    
+    if val[1] >= mage_high:
+        df_median.loc[val[0], 'out_mage'] = 1
+        
+# Month prenatal care started        
+df_median['out_monpre'] = 0
+for val in enumerate(df_median.loc[ : , 'monpre']):    
+    if val[1] >= monpre_high:
+        df_median.loc[val[0], 'out_monpre'] = 1
+
+#Father's education in years        
+df_median['out_feduc'] = 0
+for val in enumerate(df_median.loc[ : , 'feduc']):    
+    if val[1] <= feduc_lo:
+        df_median.loc[val[0], 'out_feduc'] = 1  
+
+# Average drinks per week         
+df_median['out_drink'] = 0
+for val in enumerate(df_median.loc[ : , 'drink']):    
+    if val[1] >= drink_high:
+        df_median.loc[val[0], 'out_drink'] = 1
+        
+print(df_median)
+
 ##############################################################################
 #Regression Analysis
 ##############################################################################
@@ -486,40 +552,52 @@ Some of the variables doesn't inform the model and should be dropped.
 """
 
 # Prioritize and drop variables
-df_median_data = df_median.drop(['bwght',
-                            'omaps',
-                            'fmaps',
-                            #'mage',
-                            #'meduc',
-                            'monpre',
-                            'npvis',
-                            #'fage',
-                            #'feduc',
-                            #'cigs',
-                            #'drink',
-                            'm_meduc',
-                            'm_feduc',
-                            'm_npvis',                            
-                            'male' ,
-                            'mwhte' ,
-                            'mblck' ,
-                            'moth' ,
-                            'fwhte' ,
-                            'fblck' ,
-                            'foth'],
-                            axis = 1)
-
-for col in df_median:
-    print(col)
+df_data= df_median.drop(['bwght',
+                  #'mage',
+                  #'meduc',
+                  #'monpre', 
+                  #'npvis', 
+                  #'fage', 
+                  #'feduc',
+                  'omaps',
+                  'fmaps',
+                  #'cigs',
+                  #'drink',
+                  'male', 
+                  'm_meduc',
+                  'm_npvis',
+                  'm_feduc',
+                  'out_mage',
+                  'out_monpre',
+                  'fwhte',
+                  'foth',
+                  'fblck', 
+                  'moth', 
+                  'mblck', 
+                  'mwhte',
+                  'out_npvis',
+                  'out_fage',
+                  'out_feduc',
+                  'out_drink'],axis = 1)
     
-print(df_median_data)
+#Test 1 mage, fage, cigs, drink score at k = 9 is 0.537 with 0.683 accuracy
+#Test 2 mage, meduc, fage, cigs, drink score at k = 7 is 0.681 with 0.700 accuracy
+#Test 3 mage, meduc, fage, cigs, drink, monpre at k = 9 is 0.548 with 0.682 accuracy
+#Test 4 mage, meduc, feduc, cigs, drink, monpre at k = 5 is 0.349 with 0.755 accuracy
+#Test 5 mage, meduc, fage, feduc, cigs, drink, monpre at k = 6 is 0.581 with 0.711 accuracy
+#Test 6 mage, meduc, fage, feduc, cigs, drink, monpre, npvis at k = 20 is 0.42 with 0.703 accuracy
+    
 
-# Train Data Set
-df_median_target = df_median.loc[:, 'bwght']
+df_target = df_median.loc[:, 'bwght']
+print(df_target)
+print(df_data)
 
 X_train, X_test, y_train, y_test = train_test_split(
-                                               df_median_data,
-                                               df_median_target)
+                                               df_data,
+                                               df_target, test_size = 0.10,
+                                               random_state = 508)
+
+# Let's check to make sure our shapes line up.
 
 # Training set 
 print(X_train.shape)
@@ -529,27 +607,64 @@ print(y_train.shape)
 print(X_test.shape)
 print(y_test.shape)
 
-"""
-67% of the data went to the training dataset,
-while 33% went to the testing dataset
-"""
+################################################################
+#Knn Model
+#############################################################
 
-X_train, X_test, y_train, y_test = train_test_split(
-            df_median_data,
-            df_median_target,
-            test_size = 0.10,
-            random_state = 508)
+# Creating two lists, one for training set accuracy and the other for test
+# set accuracy
+training_accuracy = []
+test_accuracy = []
 
-# Training set 
-print(X_train.shape)
-print(y_train.shape)
 
-# Testing set
-print(X_test.shape)
-print(y_test.shape)
+# Building a visualization to check to see  1 to 50
+neighbors_settings = range(1, 51)
 
+for n_neighbors in neighbors_settings:
+    # Building the model
+    clf = KNeighborsRegressor(n_neighbors = n_neighbors)
+    clf.fit(X_train, y_train)
+    
+    # Recording the training set accuracy
+    training_accuracy.append(clf.score(X_train, y_train))
+    
+    # Recording the generalization accuracy
+    test_accuracy.append(clf.score(X_test, y_test))
+
+# Plotting the visualization
+fig, ax = plt.subplots(figsize=(12,9))
+plt.plot(neighbors_settings, training_accuracy, label = "training accuracy")
+plt.plot(neighbors_settings, test_accuracy, label = "test accuracy")
+plt.ylabel("Accuracy")
+plt.xlabel("n_neighbors")
+plt.legend()
+plt.show()
+
+########################
+# What is the optimal number of neighbors?
+########################
+print(test_accuracy.index(max(test_accuracy)))
+# The best results occur when k = 5. Remember counting starts at 0 that's why it's 5
+
+# Building a model with k = 5
 knn_reg = KNeighborsRegressor(algorithm = 'auto',
-                              n_neighbors = 1)
+                              n_neighbors = 5)
+
+# Fitting the model based on the training data
+knn_reg.fit(X_train, y_train)
+
+y_pred = knn_reg.predict(X_test)
+
+# Scoring the model
+y_score = knn_reg.score(X_test, y_test)
+
+# The score is directly comparable to R-Square
+print(y_score)
+
+########################################################
+#Using x neighbors
+knn_reg = KNeighborsRegressor(algorithm = 'auto',
+                              n_neighbors = 20)
 
 # Checking the type of this new object
 type(knn_reg)
@@ -565,71 +680,15 @@ print(f"""
 Test set predictions:
 {y_pred}
 """)
-    
-y_score = knn_reg.score(X_test, y_test)#rsquared value
-y_score_train = knn_reg.score(X_train, y_train)
+
+# Calling the score method, which compares the predicted values to the actual
+# values
 y_score_test = knn_reg.score(X_test, y_test)
+y_score_train = knn_reg.score(X_train, y_train)
 
 # The score is directly comparable to R-Square
-print(y_score)
-print(y_score_train)#training data should never be one, overfit data
-print(y_score_test)
-
-# Creating two lists, one for training set accuracy and the other for test
-# set accuracy
-training_accuracy = []
-test_accuracy = []
-
-# Building a visualization to check to see  1 to 20
-neighbors_settings = range(1, 20)#set number of neighbors
-
-
-for n_neighbors in neighbors_settings:
-    # Building the model
-    clf = KNeighborsRegressor(n_neighbors = n_neighbors)
-    clf.fit(X_train, y_train)
-    
-    # Recording the training set accuracy
-    training_accuracy.append(clf.score(X_train, y_train))
-    
-    # Recording the generalization accuracy
-    test_accuracy.append(clf.score(X_test, y_test))
-    
-fig, ax = plt.subplots(figsize=(12,9))
-plt.plot(neighbors_settings, training_accuracy, label = "training accuracy")
-plt.plot(neighbors_settings, test_accuracy, label = "test accuracy")
-plt.ylabel("Accuracy")
-plt.xlabel("n_neighbors")
-plt.legend()
-plt.show()
-
-########################
-# What is the optimal number of neighbors?
-########################
-
-print(max(test_accuracy))
-print(test_accuracy.index(max(test_accuracy))+1)
-# The best results occur when k = 5.
-
-# Building a model with k = 5
-knn_reg = KNeighborsRegressor(algorithm = 'auto',
-                              n_neighbors = 5)
-
-# Fitting the model based on the training data
-knn_reg.fit(X_train, y_train)
-y_pred = knn_reg.predict(X_test)
-y_score = knn_reg.score(X_test, y_test)
-
-# The score is directly comparable to R-Square
-print(y_score)
-print(f"""
-Our base to compare other models is {y_score.round(3)}.
-    
-This base helps us evaluate more complicated models and lets us consider
-tradeoffs between accuracy and interpretability.
-""")
-#Test score based on top 4 var by corr mage, fage, cigs, drink is 0.496
-#Test score with mage, fage, monpre, npvis, cigs, drink is 0.462
-#Test score with mage, fage, meduc, feduc, monpre, npvis, cigs, drink is 0.421
-#Test score for mage, fage, meduc, monpre, npvis, cigs, drink is 0.409
-#Test score with mage, meduc, monpre, npvis, cigs, drink is 0.42
+print(y_score_test) #this model is overfitted, there's a big difference between
+#my train and my test score, it memorized all the data but it didn't perform
+#well. y_score is r squared for both test and train 
+print(y_score_train)#the y score should never be 1, should never memorize the data
+                             
