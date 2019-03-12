@@ -489,20 +489,29 @@ Some of the variables doesn't inform the model and should be dropped.
 df_median_data = df_median.drop(['bwght',
                             'omaps',
                             'fmaps',
-                            'fage',
-                            'feduc',
+                            #'mage',
+                            #'meduc',
+                            'monpre',
+                            'npvis',
+                            #'fage',
+                            #'feduc',
+                            #'cigs',
+                            #'drink',
                             'm_meduc',
                             'm_feduc',
                             'm_npvis',                            
                             'male' ,
-                           'mwhte' ,
-                           'mblck' ,
-                           'moth' ,
-                           'fwhte' ,
-                           'fblck' ,
-                           'foth'],
-                           axis = 1)
+                            'mwhte' ,
+                            'mblck' ,
+                            'moth' ,
+                            'fwhte' ,
+                            'fblck' ,
+                            'foth'],
+                            axis = 1)
 
+for col in df_median:
+    print(col)
+    
 print(df_median_data)
 
 # Train Data Set
@@ -528,7 +537,7 @@ while 33% went to the testing dataset
 X_train, X_test, y_train, y_test = train_test_split(
             df_median_data,
             df_median_target,
-            test_size = 0.25,
+            test_size = 0.10,
             random_state = 508)
 
 # Training set 
@@ -566,16 +575,13 @@ print(y_score)
 print(y_score_train)#training data should never be one, overfit data
 print(y_score_test)
 
-"""
-y_score_train is equal to 1. Hence data is overfit.
-"""
 # Creating two lists, one for training set accuracy and the other for test
 # set accuracy
 training_accuracy = []
 test_accuracy = []
 
-# Building a visualization to check to see  1 to 50
-neighbors_settings = range(1, 50)#set number of neighbors
+# Building a visualization to check to see  1 to 20
+neighbors_settings = range(1, 20)#set number of neighbors
 
 
 for n_neighbors in neighbors_settings:
@@ -623,7 +629,7 @@ This base helps us evaluate more complicated models and lets us consider
 tradeoffs between accuracy and interpretability.
 """)
 #Test score based on top 4 var by corr mage, fage, cigs, drink is 0.496
-#Test score with mage, monpre, npvis, fage, cigs, drink is 0.462
-#Test score with mage, fage, meduc, feduc, monpre, npvis, cigs, drink is 0.512
-#Test score for mage, fage, meduc, monpre, npvis, cigs, drink is 0.534
-#Test score with mage, meduc, monpre, npvis, cigs, drink is 0.546
+#Test score with mage, fage, monpre, npvis, cigs, drink is 0.462
+#Test score with mage, fage, meduc, feduc, monpre, npvis, cigs, drink is 0.421
+#Test score for mage, fage, meduc, monpre, npvis, cigs, drink is 0.409
+#Test score with mage, meduc, monpre, npvis, cigs, drink is 0.42
