@@ -582,7 +582,7 @@ sns.lmplot(x = 'meduc',
            y = 'bwght',
            data = df,
            fit_reg = False,
-           hue= 'drink',
+           hue= 'meduc',
            palette = 'plasma'
            )
 plt.show()
